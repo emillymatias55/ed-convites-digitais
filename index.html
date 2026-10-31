@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ED Convites Digitais</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff9fc;color:#583751}
+header{background:linear-gradient(135deg,#f6dde5,#dccff0);padding:35px 15px;text-align:center}
+.logo{font:70px Georgia,serif;color:#b48a48}
+h1{font-size:27px;margin:8px 0}
+h2{text-align:center;color:#9c5794}
+header p{line-height:1.5}
+.botoes{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;padding:20px}
+button{border:0;border-radius:25px;padding:12px 18px;background:#eddaed;color:#73476d;font-weight:bold;cursor:pointer}
+button.ativo{background:#a56ba2;color:white}
+main{max-width:1000px;margin:auto;padding:12px 18px}
+input{width:100%;padding:15px;border:1px solid #dfc9dd;border-radius:15px;font-size:16px;margin:8px 0 20px}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:15px}
+.card{background:white;border-radius:18px;overflow:hidden;text-align:center;box-shadow:0 3px 14px #eadce7;padding-bottom:18px}
+.foto{height:165px;background:linear-gradient(140deg,#f6dde5,#dccff0);display:flex;align-items:center;justify-content:center;font-size:65px}
+.card h3{font-size:17px;margin:14px 7px}
+.preco{color:#ad5496;font-size:21px;font-weight:bold}
+.pedir{display:inline-block;background:#c66c9b;color:white;border-radius:25px;padding:12px 15px;text-decoration:none;font-size:13px;font-weight:bold;margin:5px}
+.premium{background:#a775b7}
+.aviso{text-align:center;font-size:13px;line-height:1.6;color:#846f80}
+.vazio{text-align:center;grid-column:1/-1;padding:25px}
+footer{text-align:center;background:#f6dde5;padding:26px;margin-top:35px}
+.whats{background:#25a966}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">ED ♡</div>
+<h1>ED Convites Digitais</h1>
+<p>Seu momento especial começa com um convite inesquecível!</p>
+<p>💌 Convites personalizados com carinho 💌</p>
+</header>
+
+<nav class="botoes">
+<button class="ativo" onclick="filtrar('todos',this)">Todos</button>
+<button onclick="filtrar('simples',this)">Simples</button>
+<button onclick="filtrar('animados',this)">Animados</button>
+<button onclick="filtrar('cartinhas',this)">Cartinhas</button>
+</nav>
+
+<main>
+<h2>Escolha seu convite ✨</h2>
+<input id="busca" placeholder="🔎 Pesquisar por tema..." oninput="mostrar()">
+
+<p class="aviso">Escolha seu modelo favorito. A personalização e o pagamento são combinados diretamente pelo WhatsApp.</p>
+
+<div id="grade" class="grade"></div>
+</main>
+
+<footer>
+<h3>ED Convites Digitais 💕</h3>
+<p>Atendimento personalizado pelo WhatsApp</p>
+<a class="pedir whats" href="https://wa.me/5538991254584" target="_blank">💬 Falar no WhatsApp</a>
+</footer>
+
+<script>
+const telefone="5538991254584";
+let categoria="todos";
+
+const produtos=[
+{nome:"Unicórnio",tipo:"simples",preco:10,emoji:"🦄"},
+{nome:"Toy Story",tipo:"simples",preco:10,emoji:"🚀"},
+{nome:"Valente",tipo:"simples",preco:10,emoji:"🏹"},
+{nome:"Barbie",tipo:"simples",preco:10,emoji:"🎀"},
+{nome:"Safari",tipo:"simples",preco:10,emoji:"🦁"},
+{nome:"Fazendinha",tipo:"simples",preco:10,emoji:"🐮"},
+{nome:"Borboletas",tipo:"simples",preco:10,emoji:"🦋"},
+{nome:"Astronauta",tipo:"simples",preco:10,emoji:"🚀"},
+{nome:"Joaninha",tipo:"simples",preco:10,emoji:"🐞"},
+{nome:"Cinderela",tipo:"cartinhas",preco:20,emoji:"👑"},
+{nome:"Branca de Neve",tipo:"cartinhas",preco:20,emoji:"🍎"},
+{nome:"Mickey Safari",tipo:"cartinhas",preco:20,emoji:"🐾"},
+{nome:"Guerreiras do K-Pop",tipo:"cartinhas",preco:20,emoji:"🎤"},
+{nome:"Como Treinar Seu Dragão",tipo:"cartinhas",preco:20,emoji:"🐉"},
+{nome:"Capivara com Morangos",tipo:"cartinhas",preco:20,emoji:"🍓"}
+];
+
+function filtrar(tipo,botao){
+categoria=tipo;
+document.querySelectorAll("nav button").forEach(b=>b.classList.remove("ativo"));
+botao.classList.add("ativo");
+mostrar();
+}
+
+function pedido(p,versao,preco){
+let mensagem=`Olá! Gostaria de encomendar o convite ${p.nome}, versão ${versao}, no valor de R$ ${preco.toFixed(2).replace(".",",")}.`;
+return `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+}
+
+function mostrar(){
+let busca=document.getElementById("busca").value.toLowerCase();
+let lista=produtos.filter(p=>
+(categoria==="todos"||p.tipo===categoria)&&p.nome.toLowerCase().includes(busca)
+);
+let grade=document.getElementById("grade");
+grade.innerHTML="";
+if(!lista.length){
+grade.innerHTML='<p class="vazio">Nenhum convite cadastrado nesta categoria ainda. 💗</p>';
+return;
+}
+lista.forEach(p=>{
+let card=document.createElement("div");
+card.className="card";
+let opcoes=p.tipo==="cartinhas"
+?`<a class="pedir" target="_blank" href="${pedido(p,"Padrão",20)}">Padrão R$ 20</a>
+<a class="pedir premium" target="_blank" href="${pedido(p,"Com botões clicáveis",40)}">Com botões R$ 40</a>`
+:`<a class="pedir" target="_blank" href="${pedido(p,"Simples",p.preco)}">Pedir pelo WhatsApp</a>`;
+card.innerHTML=`<div class="foto">${p.emoji}</div><h3>${p.nome}</h3><p class="preco">A partir de R$ ${p.preco.toFixed(2).replace(".",",")}</p>${opcoes}`;
+grade.appendChild(card);
+});
+}
+mostrar();
+</script>
+
+</body>
+</html>
